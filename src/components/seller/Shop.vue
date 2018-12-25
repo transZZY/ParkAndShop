@@ -3,7 +3,7 @@
     <p style="font-size:12px; font-weight:700; color: #fff; padding: 3px 5px; height: 25px; line-height: 25px; background: rgb(63,127,206)">All Goods</p>
 
     <ul>
-      <li v-bind:key="data" v-for="data in datas" v-on:click="goGood(data)">
+      <li v-bind:key="data" v-for="data in datas">
         <img v-bind:src="data.portraitURL" style="width: 240px; height: 240px; border: 1px solid #dfdfdf;"/>
         <p style="height: 16px; margin: 10px 3px 7px;text-align: center; vertical-align: center; line-height: 16px; font-weight: 500; font-size: 12px; color: #36c;">{{ data.pName }}</p>
         <p style="height: 27px; text-align: center;  font-weight: 900; font-size: 14px; color: #f40;">💰¥{{ data.price }}</p>
@@ -23,8 +23,7 @@ export default {
     return {
       id: -1,
       datas: [],
-      intent: {},
-      isLoad: false
+      intent: {}
     }
   },
 
@@ -32,7 +31,7 @@ export default {
     initLoad: function () {
       this.isLoad = true
       this.$http.get(this.URL + 'b/good/all?id=' +
-        this.id)
+        this.getCookie('userId'))
         .then((data) => {
           console.log(data)
           this.isLoad = false
@@ -42,18 +41,11 @@ export default {
           console.log(error)
           this.isLoad = false
         })
-    },
-
-    goGood: function (info) {
-      this.$router.push({name: 'seller_good', params: {data: info}})
     }
   },
 
-  mounted () {
-    this.id = this.$route.params.data
-    this.$emit('childByValue', this.id)
+  created: function () {
     this.initLoad()
-    console.log(this.id)
   }
 
   // mounted () {
